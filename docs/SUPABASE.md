@@ -39,7 +39,7 @@ Crée le fichier .env à la racine de ton projet :
 
 SUPABASE_URL= # URL de ton projet Supabase
 SUPABASE_KEY= # Clé publique de ton projet Supabase
-SUPABASE_SERVICE_KEY= # Clé secrète de ton projet Supabase
+SUPABASE_SECRET_KEY= # Clé secrète de ton projet Supabase (ex-service_role)
 
 Dans nuxt.config.ts :
 
@@ -52,7 +52,7 @@ export default defineNuxtConfig({
   supabase: {
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_KEY,
-    serviceKey: process.env.SUPABASE_SERVICE_KEY,
+    serviceKey: process.env.SUPABASE_SECRET_KEY,
     redirect: false  // on gère les redirections manuellement
   }
 })
@@ -63,45 +63,49 @@ export default defineNuxtConfig({
 ### 🔷 ÉTAPE 4 — Configurer l'Auth Supabase
 ```
 Dans Supabase Dashboard :
-Authentication → Providers
 
-✅ Activer : Email (déjà actif par défaut)
-❌ Désactiver TOUT le reste :
-   Google, GitHub, Discord, etc.
-   (ton app = login interne uniquement)
+1) Authentication → Providers
+   ✅ Email : Enabled (déjà actif par défaut)
+   ❌ Phone : Disabled (et tout autre provider : Google, GitHub, etc.)
+   → Ton app = login interne username/password uniquement
 
-Authentication → Email Templates
-→ Désactiver "Confirm email" car pas d'emails prévus
+2) Authentication → Providers → Email (cliquer sur la ligne Email)
+   ✅ Enable Email provider : ON
+   → Secure password change : OFF (pour permettre le changement obligatoire
+     au premier login sans exiger une session "récente")
+   → Minimum password length : 6 (ou 8 recommandé)
 
-Authentication → URL Configuration
-→ Site URL : https://ton-app.vercel.app
-→ Redirect URLs : https://ton-app.vercel.app/**
+3) Authentication → Sign In / Providers (onglet "Supabase Auth")
+   Section "User Signups" :
+   ✅ Allow new users to sign up : ON
+      (nécessaire pour que les comptes créés par les admins via l’app soient acceptés ;
+       l’absence d’inscription publique est gérée par l’app : pas de page signup)
+   ❌ Confirm email : OFF (pas d’envoi d’email prévu dans le BRIEF)
+   ❌ Allow anonymous sign-ins : OFF
+   ❌ Allow manual linking : OFF
+   → Cliquer "Save changes"
 
-Authentication → Settings
-→ Désactiver "Enable email confirmations"
-→ Désactiver "Enable phone confirmations"
+4) Authentication → URL Configuration
+   → Site URL : https://ton-app.vercel.app (ou ton domaine)
+   → Redirect URLs : https://ton-app.vercel.app/**
 ```
 
 --------------------------------------------
 
 ### 🔷 ÉTAPE 5 — Créer les tables SQL
 ```
-Dans Supabase Dashboard :
-SQL Editor → New query
+Migrations dans supabase/migrations/ (exécuter dans l'ordre) :
 
-Colle et exécute le schéma SQL généré par Cursor
-(depuis le BRIEF.md) dans cet ordre :
-  1. Extensions et types enum
-  2. Table zones
-  3. Table localites
-  4. Table users
-  5. Table user_privileges
-  6. Table forms
-  7. Table submissions
-  8. Table submission_rows
-  9. Table submission_history
-  10. Table notifications
-  11. Seed zones et localités maliennes
+1. 20260301000000_initial_schema.sql
+   → Tables, enums, RLS, fonctions get_my_role/has_privilege
+
+2. 20260301000001_seed_geo.sql
+   → Zones maliennes + localités Bamako
+
+3. 20260301000002_storage.sql
+   → Policies Storage (après création bucket "submissions" via Dashboard)
+
+Dans Supabase Dashboard : SQL Editor → New query → coller et exécuter
 ```
 
 --------------------------------------------
@@ -169,7 +173,7 @@ Policy 2 — Read (SELECT) :
 3. Dans "Environment Variables", ajoute :
    SUPABASE_URL         = https://xxxxx.supabase.co
    SUPABASE_KEY         = eyJxxx... (anon)
-   SUPABASE_SERVICE_KEY = eyJxxx... (service role)
+   SUPABASE_SECRET_KEY = eyJxxx... (service role / secret key)
 
 4. Framework Preset : Nuxt.js (auto-détecté)
 

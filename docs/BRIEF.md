@@ -405,6 +405,7 @@ users
   first_name           text  not null
   last_name            text  not null
   phone                text  not null unique
+  email                text
   zone_id              uuid  references zones(id)
   localite_id          uuid  references localites(id)
   role                 enum  (super_admin | admin |
@@ -557,7 +558,7 @@ Supabase Storage :
 3. CRUD utilisateurs
    - Rôles, privilèges, délégation en cascade
    - Champs : first_name, last_name, phone,
-     username, role, zone_id, localite_id,
+     email, username, role, zone_id, localite_id,
      supervisor_id
 
 4. CRUD questionnaires
