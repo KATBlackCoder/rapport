@@ -47,6 +47,7 @@ export const usePermissionsStore = defineStore('permissions', {
     },
 
     async loadUserPrivileges(userId: string) {
+      if (!userId || userId === 'undefined') return
       const supabase = useSupabaseClient()
       const { data } = await supabase
         .from('user_privileges')

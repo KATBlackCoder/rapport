@@ -2,6 +2,9 @@
  * Plugin auth : synchronise Supabase Auth avec le store auth.
  * Charge le profil users et les privilèges au login.
  */
+import { useAuthStore } from '~/stores/auth'
+import { usePermissionsStore } from '~/stores/permissions'
+
 export default defineNuxtPlugin(async () => {
   const supabase = useSupabaseClient()
   const authStore = useAuthStore()

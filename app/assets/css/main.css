@@ -1,2 +1,100 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+/* ==========================================================================
+   Theme — palette Orange (partenariat)
+   Primary: #FF7900 (Orange brand)
+   ========================================================================== */
+@theme static {
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-300: #fdba74;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #ff7900;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+  --color-orange-800: #9a3412;
+  --color-orange-900: #7c2d12;
+  --color-orange-950: #431407;
+}
+
+/* ==========================================================================
+   Layout — auth (Nuxt UI semantic: bg-inverted, bg-elevated)
+   ========================================================================== */
+.auth-layout {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.auth-login-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ==========================================================================
+   Page transitions (Vue Transition name="page")
+   ========================================================================== */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+/* ==========================================================================
+   Bottom nav — mobile (Nuxt UI semantic: bg-elevated, border-default)
+   ========================================================================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.main-with-bottom-nav {
+  padding-bottom: 0;
+}
+
+@media (max-width: 767.98px) {
+  .main-with-bottom-nav {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* ==========================================================================
+   Component transitions (fade-in-up)
+   ========================================================================== */
+.fade-in-up {
+  animation: fade-in-up 0.3s ease-out;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

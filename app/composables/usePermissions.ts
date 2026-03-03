@@ -6,6 +6,9 @@
  */
 import type { Database } from '~/types/database.types'
 
+import { useAuthStore } from '~/stores/auth'
+import { usePermissionsStore } from '~/stores/permissions'
+
 type UserRole = Database['public']['Enums']['user_role']
 type UserPrivilege = Database['public']['Enums']['user_privilege']
 type UserRow = Database['public']['Tables']['users']['Row']

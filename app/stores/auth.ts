@@ -51,16 +51,18 @@ export const useAuthStore = defineStore('auth', {
       const { error } = await supabase.auth.updateUser({ password: newPassword })
       if (error) throw error
       if (this.user) {
-        // Mettre à jour le flag côté serveur (RPC ou API)
         const { error: updateError } = await supabase
           .from('users')
           .update({ must_change_password: false })
           .eq('id', this.user.id)
-        if (!updateError) this.mustChangePassword = false
+        if (!updateError) {
+          this.setUser({ ...this.user, must_change_password: false })
+        }
       }
     },
 
     async fetchUserProfile(authUserId: string) {
+      if (!authUserId || authUserId === 'undefined') return null
       const supabase = useSupabaseClient()
       const { data, error } = await supabase
         .from('users')

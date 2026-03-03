@@ -16,8 +16,9 @@ export default defineNuxtConfig({
     typeCheck: false, // exécuter manuellement : pnpm exec nuxi typecheck
   },
 
-  // SPA/SSR hybride : pages auth en SPA (offline), reste en SSR
+  // SPA/SSR hybride : pages auth + index (permissions client-side) en SPA
   routeRules: {
+    '/': { ssr: false },
     '/login': { ssr: false },
     '/change-password': { ssr: false },
   },
