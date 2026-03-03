@@ -66,6 +66,7 @@
         </p>
         <UButton to="/forms" label="Accéder" color="primary" block />
       </UCard>
+
     </div>
 
     <div v-if="!canViewResponses() && !canCreateUser() && !canManageForms()" class="rounded-[var(--ui-radius)] border border-default bg-muted/50 p-6 text-center">

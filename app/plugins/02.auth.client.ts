@@ -3,12 +3,14 @@
  * Charge le profil users et les privilèges au login.
  */
 import { useAuthStore } from '~/stores/auth'
+import { useGeoStore } from '~/stores/geo'
 import { usePermissionsStore } from '~/stores/permissions'
 
 export default defineNuxtPlugin(async () => {
   const supabase = useSupabaseClient()
   const authStore = useAuthStore()
   const permissionsStore = usePermissionsStore()
+  const geoStore = useGeoStore()
 
   const initFromSession = async () => {
     const { data: { session } } = await supabase.auth.getSession()
@@ -17,9 +19,12 @@ export default defineNuxtPlugin(async () => {
       if (authStore.userId) {
         await permissionsStore.loadUserPrivileges(authStore.userId)
       }
+      await geoStore.fetchAll()
     } else {
       authStore.setUser(null)
       permissionsStore.setGrantedPrivileges([])
+      geoStore.setZones([])
+      geoStore.setLocalities([])
     }
   }
 
@@ -31,9 +36,12 @@ export default defineNuxtPlugin(async () => {
       if (authStore.userId) {
         await permissionsStore.loadUserPrivileges(authStore.userId)
       }
+      await geoStore.fetchAll()
     } else {
       authStore.setUser(null)
       permissionsStore.setGrantedPrivileges([])
+      geoStore.setZones([])
+      geoStore.setLocalities([])
     }
   })
 })

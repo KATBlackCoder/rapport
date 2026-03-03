@@ -56,6 +56,10 @@ export function usePermissions() {
     return permissionsStore.hasPrivilege(role.value, privilege)
   }
 
+  function canManageGeo(): boolean {
+    return permissionsStore.hasRoleOrAbove(role.value, 'admin')
+  }
+
   return {
     canCreateUser,
     canSendBack,
@@ -64,6 +68,7 @@ export function usePermissions() {
     canExportCollectif,
     canSeeUser,
     canGrantPrivilege,
+    canManageGeo,
     role,
   }
 }

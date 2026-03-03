@@ -48,17 +48,22 @@ onMounted(() => {
   }
 })
 
-const userMenuItems = computed(() => [
-  [
-    {
-      label: 'Déconnexion',
-      icon: 'i-lucide-log-out',
-      color: 'error' as const,
-      onSelect: async () => {
-        await authStore.logout()
-        router.replace('/login')
-      },
+const { canManageGeo } = usePermissions()
+
+const userMenuItems = computed(() => {
+  const group: { label: string; icon?: string; to?: string; color?: 'error'; onSelect?: () => Promise<void> }[] = []
+  if (canManageGeo()) {
+    group.push({ label: 'Paramètres', icon: 'i-lucide-settings', to: '/parametres' })
+  }
+  group.push({
+    label: 'Déconnexion',
+    icon: 'i-lucide-log-out',
+    color: 'error' as const,
+    onSelect: async () => {
+      await authStore.logout()
+      router.replace('/login')
     },
-  ],
-])
+  })
+  return [group]
+})
 </script>

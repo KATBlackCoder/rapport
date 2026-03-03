@@ -22,7 +22,7 @@
 - **Plugin Pinia persistedstate** : `app/plugins/01.pinia-persistedstate.client.ts`
 - **Plugin auth** : `app/plugins/02.auth.client.ts` (sync Supabase Auth → stores)
 - **Stores** : auth, permissions, forms, submissions, notifications, geo (typés TypeScript)
-- **Composable** : `usePermissions()` (canCreateUser, canSendBack, canViewResponses, canManageForms, canExportCollectif, canSeeUser, canGrantPrivilege)
+- **Composable** : `usePermissions()` (canCreateUser, canSendBack, canViewResponses, canManageForms, canExportCollectif, canSeeUser, canGrantPrivilege, canManageGeo)
 - **Persistence** : auth, forms, submissions (persistedstate)
 
 ### Authentification (01) — Implémenté
@@ -42,9 +42,19 @@
 - **Bottom Navigation** : visible uniquement sur mobile (`md:hidden`), liens Accueil/Dashboard/Utilisateurs/Questionnaires selon usePermissions
 - **Design system** : `.auth-logo-inverted` et `.fade-in-up` dans `main.css`, réduction du Tailwind hardcodé
 
+### Référentiels géographiques (02) — Implémenté
+
+- **Migration RLS** : `20260303000000_zones_localities_rls_admin.sql` — INSERT/UPDATE/DELETE zones et localities réservés à admin et super_admin
+- **usePermissions** : `canManageGeo()` — accès admin et super_admin
+- **Store geo** : CRUD (createZone, updateZone, deleteZone, createLocality, updateLocality, deleteLocality), chargement au login via plugin auth
+- **Pages** : `/parametres` (index), `/parametres/zones-localites` (CRUD zones et localités)
+- **Middleware** : `parametres.ts` — redirection si rôle non admin/super_admin
+- **UI** : UTable zones et localités, UModal create/edit/delete, USelect filtre par zone, toasts feedback
+- **Navigation** : carte Paramètres sur index (v-if canManageGeo), lien Paramètres dans menu utilisateur
+
 ### Prochaine étape
 
-- `tasks/02-referentiels.md` : zones et localités
+- `tasks/03-users.md` : gestion utilisateurs
 
 ### 00-infrastructure — Complété (suite)
 
