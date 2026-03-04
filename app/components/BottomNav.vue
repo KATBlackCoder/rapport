@@ -1,15 +1,18 @@
 <template>
-  <nav class="bottom-nav md:hidden bg-elevated border-t border-default">
-    <div class="flex justify-around py-2">
+  <nav
+    class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-elevated border-t border-default"
+    style="padding-bottom: env(safe-area-inset-bottom);"
+  >
+    <div class="flex justify-around py-1.5">
       <NuxtLink
         v-for="item in navItems"
         :key="item.to"
         :to="item.to"
-        class="flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-colors min-w-16"
-        :class="isActive(item.to) ? 'text-primary bg-primary/10' : 'text-muted hover:text-default hover:bg-muted'"
+        class="flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors min-w-14"
+        :class="isActive(item.to) ? 'text-primary' : 'text-muted hover:text-default'"
       >
         <UIcon :name="item.icon" class="size-5 shrink-0" />
-        <span class="text-xs font-medium">{{ item.label }}</span>
+        <span class="text-[10px] font-medium leading-tight">{{ item.label }}</span>
       </NuxtLink>
     </div>
   </nav>
@@ -19,17 +22,27 @@
 import { usePermissions } from '~/composables/usePermissions'
 
 const route = useRoute()
-const { canViewResponses, canCreateUser, canManageForms } = usePermissions()
+const { canViewResponses, canCreateUser, canManageGeo } = usePermissions()
 
-const isActive = (path: string) => route.path === path || route.path.startsWith(path + '/')
+const isActive = (path: string) => {
+  if (path === '/') return route.path === '/'
+  return route.path === path || route.path.startsWith(path + '/')
+}
 
 const navItems = computed(() => {
-  const items: { to: string; label: string; icon: string; show: boolean }[] = [
-    { to: '/', label: 'Accueil', icon: 'i-lucide-home', show: true },
-    { to: '/dashboard', label: 'Dashboard', icon: 'i-lucide-bar-chart-2', show: canViewResponses() },
-    { to: '/users', label: 'Utilisateurs', icon: 'i-lucide-users', show: canCreateUser() },
-    { to: '/forms', label: 'Questionnaires', icon: 'i-lucide-clipboard-list', show: canManageForms() },
+  const items: { to: string; label: string; icon: string }[] = [
+    { to: '/', label: 'Accueil', icon: 'i-lucide-home' },
   ]
-  return items.filter((i) => i.show)
+  if (canViewResponses()) {
+    items.push({ to: '/dashboard', label: 'Dashboard', icon: 'i-lucide-bar-chart-2' })
+  }
+  if (canCreateUser()) {
+    items.push({ to: '/users', label: 'Utilisateurs', icon: 'i-lucide-users' })
+  }
+  items.push({ to: '/forms', label: 'Questionnaires', icon: 'i-lucide-clipboard-list' })
+  if (canManageGeo()) {
+    items.push({ to: '/parametres', label: 'Paramètres', icon: 'i-lucide-settings' })
+  }
+  return items
 })
 </script>

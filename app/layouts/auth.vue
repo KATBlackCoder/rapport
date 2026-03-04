@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-layout bg-neutra">
+  <div class="auth-layout">
     <slot />
   </div>
 </template>

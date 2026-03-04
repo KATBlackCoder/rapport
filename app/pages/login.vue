@@ -1,15 +1,21 @@
 <template>
   <NuxtLayout name="auth">
-    <div class="auth-login-wrapper">
-      <UPageCard class="w-full max-w-md bg-elevated border border-default fade-in-up" :ui="{ root: 'rounded-[var(--ui-radius)]' }">
+    <div class="auth-login-wrapper fade-in-up">
+      <div class="flex flex-col items-center gap-3 mb-6">
+        <AppLogo :show-subtitle="true" />
+      </div>
+
+      <UPageCard
+        class="w-full max-w-sm border border-default"
+        :ui="{ root: 'rounded-xl', body: 'p-6' }"
+      >
         <UAuthForm
           :schema="schema"
           :fields="fields"
           :loading="loading"
           title="Connexion"
-          description="Identifiant au format prenom@telephone.org"
-          icon="i-lucide-clipboard-list"
-          :submit="{ label: 'Se connecter', block: true, color: 'primary' }"
+          description="Saisissez vos identifiants pour accéder à l'application."
+          :submit="{ label: 'Se connecter', block: true, color: 'primary', size: 'md' }"
           :ui="authFormUi"
           @submit="onSubmit"
         >
@@ -19,11 +25,16 @@
               :title="error"
               color="error"
               variant="soft"
-              class="mb-4"
+              class="mb-2"
+              icon="i-lucide-alert-circle"
             />
           </template>
         </UAuthForm>
       </UPageCard>
+
+      <p class="mt-4 text-xs text-center text-muted">
+        Format identifiant : <code class="text-highlighted">prenom@telephone.org</code>
+      </p>
     </div>
   </NuxtLayout>
 </template>
@@ -60,7 +71,7 @@ const fields: AuthFormField[] = [
     name: 'password',
     type: 'password',
     label: 'Mot de passe',
-    placeholder: 'Entrez votre mot de passe',
+    placeholder: '••••••••',
     required: true,
   },
 ]
@@ -68,13 +79,12 @@ const fields: AuthFormField[] = [
 const authFormUi = {
   root: 'auth-form',
   header: 'flex flex-col text-center',
-  leading: 'mb-3',
-  leadingIcon: 'size-9 shrink-0 text-highlighted',
-  title: 'text-xl font-semibold text-highlighted',
-  description: 'mt-2 text-sm text-muted',
-  body: 'gap-y-6 flex flex-col',
-  form: 'space-y-5',
-  input: 'w-full rounded-[var(--ui-radius)]',
+  leading: 'hidden',
+  title: 'text-lg font-semibold text-highlighted',
+  description: 'mt-1 text-sm text-muted',
+  body: 'gap-y-4 flex flex-col mt-4',
+  form: 'space-y-4',
+  input: 'w-full rounded-lg',
 }
 
 const loading = ref(false)

@@ -60,6 +60,14 @@ export function usePermissions() {
     return permissionsStore.hasRoleOrAbove(role.value, 'admin')
   }
 
+  function canModifyRole(): boolean {
+    return role.value === 'super_admin' || role.value === 'admin'
+  }
+
+  function canDisableUser(): boolean {
+    return role.value === 'super_admin' || role.value === 'admin'
+  }
+
   return {
     canCreateUser,
     canSendBack,
@@ -69,6 +77,8 @@ export function usePermissions() {
     canSeeUser,
     canGrantPrivilege,
     canManageGeo,
+    canModifyRole,
+    canDisableUser,
     role,
   }
 }

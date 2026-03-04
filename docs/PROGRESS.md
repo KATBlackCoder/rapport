@@ -52,9 +52,32 @@
 - **UI** : UTable zones et localités, UModal create/edit/delete, USelect filtre par zone, toasts feedback
 - **Navigation** : carte Paramètres sur index (v-if canManageGeo), lien Paramètres dans menu utilisateur
 
+### CRUD Utilisateurs (03) — Implémenté
+
+- **Migration RLS** : `20260304000000_users_rls.sql` — lecture hiérarchie (can_see_user), UPDATE users/user_privileges selon privilèges
+- **API serveur** : `server/api/users/create.post.ts` — création via Supabase Auth admin (service role), validation create_user + rôle strictement inférieur
+- **Store users** : fetchUsers (filtres), createUser, updateUser, grantPrivilege, revokePrivilege, fetchUserPrivileges
+- **Pages** : `/users` (liste + filtres rôle/zone/localité/actif), `/users/create` (formulaire + privilèges optionnels), `/users/[userId]` (édition rôle, privilèges, désactivation)
+- **Middleware** : `users.ts` — accès si create_user (super_admin, admin, ou privilège accordé)
+- **usePermissions** : canModifyRole(), canDisableUser() — super_admin et admin uniquement
+- **Règles métier** : username = prenom@telephone.org, mot de passe = ML+phone, privilèges accordés uniquement si possédés
+
+### CRUD Questionnaires (04) — Implémenté
+
+- **Types** : `app/types/forms.ts` — FormField, FormFieldType, ConditionOperator, FormFieldConditions, AssignedTo, FORM_TYPE_LABELS, FIELD_TYPE_LABELS, CONDITION_OPERATOR_LABELS
+- **Migration RLS** : `supabase/migrations/20260304000001_forms_rls.sql` — SELECT (admin voit tout, autres par assigned_to), INSERT/UPDATE/DELETE réservés à super_admin et admin
+- **Composable** : `useFormConditions(fields, formData)` et `useFormConditionsCleanData()` — évaluation des conditions d’affichage et nettoyage des valeurs masquées
+- **Store forms** : fetchForms, fetchFormById, createForm, updateForm, deleteForm, filtres type (daily/urgent) et actif, persistance offline
+- **Pages** : `/forms` (liste, filtres type/actif, bouton Créer si canManageForms), `/forms/create` (builder), `/forms/[formId]` (édition + suppression)
+- **Builder** : drag & drop (vue-draggable-plus), métadonnées (title, description, type journalier|urgent, is_active), assignation par rôles et utilisateurs (assigned_to)
+- **Champs** : types texte court/long, nombre, téléphone, date, heure, select, radio, checkbox, photo ; label, required, options pour listes
+- **Logique conditionnelle** : « Afficher ce champ SI » — champ source, opérateur (égal, différent, contient, rempli, vide), ET/OU, stockage dans `fields[].conditions`
+- **Composant** : `app/components/forms/FormFieldEditor.vue` — édition champ (label, type, options, conditions) dans USlideover
+- **Navigation** : lien Questionnaires visible pour tous les utilisateurs authentifiés (liste filtrée par RLS) ; Créer/Modifier/Supprimer réservés aux admins
+
 ### Prochaine étape
 
-- `tasks/03-users.md` : gestion utilisateurs
+- `tasks/05-filling.md` : remplissage des questionnaires (utilisation de useFormConditions côté remplissage)
 
 ### 00-infrastructure — Complété (suite)
 

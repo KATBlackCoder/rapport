@@ -22,6 +22,8 @@ export default defineNuxtConfig({
     '/login': { ssr: false },
     '/change-password': { ssr: false },
     '/parametres/**': { ssr: false },
+    '/users/**': { ssr: false },
+    '/forms/**': { ssr: false },
   },
 
   supabase: {

@@ -13,9 +13,9 @@ export default defineNuxtPlugin(async () => {
   const geoStore = useGeoStore()
 
   const initFromSession = async () => {
-    const { data: { session } } = await supabase.auth.getSession()
-    if (session?.user) {
-      await authStore.fetchUserProfile(session.user.id)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await authStore.fetchUserProfile(user.id)
       if (authStore.userId) {
         await permissionsStore.loadUserPrivileges(authStore.userId)
       }
